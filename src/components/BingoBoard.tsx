@@ -1,5 +1,4 @@
 import React from 'react';
-import { BingoNumber } from '../data/bingoContent';
 
 interface BingoBoardProps {
   markedNumbers: number[];
@@ -9,7 +8,7 @@ interface BingoBoardProps {
 export const BingoBoard: React.FC<BingoBoardProps> = ({ markedNumbers, showQuinaMessage }) => {
   return (
     <div className="bingo-board">
-      {[...Array(69)].map((_, i) => {
+      {[...Array(90)].map((_, i) => {
         const number = i + 1;
         const isMarked = markedNumbers.includes(number);
         return (
