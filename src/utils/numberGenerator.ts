@@ -9,12 +9,12 @@ interface NumberStore {
 }
 
 export const useNumberStore = create<NumberStore>((set, get) => ({
-  availableNumbers: new Set(Array.from({ length: 69 }, (_, i) => i + 1)),
+  availableNumbers: new Set(Array.from({ length: 90 }, (_, i) => i + 1)),
   usedNumbers: new Set<number>(),
   
   initialize: () => {
     set({
-      availableNumbers: new Set(Array.from({ length: 69 }, (_, i) => i + 1)),
+      availableNumbers: new Set(Array.from({ length: 90 }, (_, i) => i + 1)),
       usedNumbers: new Set<number>()
     });
   },
@@ -36,7 +36,7 @@ export const useNumberStore = create<NumberStore>((set, get) => ({
   
   reset: () => {
     set({
-      availableNumbers: new Set(Array.from({ length: 69 }, (_, i) => i + 1)),
+      availableNumbers: new Set(Array.from({ length: 90 }, (_, i) => i + 1)),
       usedNumbers: new Set<number>()
     });
   }
