@@ -575,7 +575,7 @@ kbd {
   background:repeating-conic-gradient(from 0deg at 50% 53%,#4836a822 0deg 12deg,transparent 12deg 24deg);
   animation:rays-in 1s ease-out both;
 }
-.prize-dialog.bingo {
+.prize-dialog.quina {
   border-color:#b494ff;
   background:#20113b;
 }
@@ -626,7 +626,7 @@ kbd {
   animation:prize-in .65s cubic-bezier(.2,.8,.2,1) both;
   margin:1vmin 0 2vmin;
 }
-.prize-dialog.bingo h2 {
+.prize-dialog.quina h2 {
   color:#fff;
   text-shadow:5px 6px 0 #ff5514,12px 14px 0 #4836a8;
 }
@@ -832,3 +832,5 @@ kbd {
 .prize-banner .primary-button kbd { color:white; border-color:#897a9e; }
 .prize-banner .prize-confetti { z-index:-1; }
 @media(max-aspect-ratio:1/1) { .prize-banner { gap:8px; padding:0 8px; }.banner-help { display:none; }.prize-banner h2 { font-size:7vw; }.banner-trophy { width:6vw; height:6vw; }.prize-banner .primary-button { font-size:9px; }.header-title { padding-left:0; } }
+
+.checking-card .board-card { border-color:#aa89ed; box-shadow:inset 0 0 0 1px #aa89ed; }

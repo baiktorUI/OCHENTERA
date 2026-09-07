@@ -27,7 +27,7 @@ npm run lint
 
 No hi ha botó per sortejar. La llegenda inferior mostra totes les dreceres. Els controls d’àudio i de confirmació també es poden utilitzar amb ratolí. En un diàleg, Enter activa el botó enfocat; no sorteja números.
 
-Els premis aturen l’àudio i el sorteig fins que es tanquen. Per reprendre la música, prem P. Les celebracions ocupen només la capçalera i mantenen visibles el número actual, els anteriors i tot el tauler per comprovar el cartró. Inclouen dues ràfegues breus de confeti limitades a la capçalera, amb neteja en tancar i respecte per la preferència de moviment reduït.
+Els premis aturen l’àudio i el sorteig fins que es tanquen. Per reprendre la música, prem P. Els premis apareixen a pantalla completa durant 4 segons, amb confeti breu. Després es torna automàticament al tauler amb l’avís «COMPROVANT EL CARTRÓ» i el premi cantat a la capçalera. El sorteig i la música continuen en pausa fins a prémer «Tornem-hi!» o Esc. Durant la celebració inicial, Esc o «Veure els números» permeten passar abans a la comprovació. Els temporitzadors i el confeti es netegen en tancar, respectant la preferència de moviment reduït.
 
 ## Projecció
 
