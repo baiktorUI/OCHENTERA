@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { fadeVolume } from '../src/utils/audioFade.ts';
+assert.equal(fadeVolume(8,10),.5);
+assert.equal(fadeVolume(9,10),.5);
+assert.equal(fadeVolume(9.5,10),.25);
+assert.equal(fadeVolume(10,10),0);
+assert.equal(fadeVolume(0,NaN),.5);
+const require=createRequire(import.meta.url);
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const browser=await chromium.launch({channel:process.env.BROWSER_CHANNEL || 'chrome',headless:true});
+try {
+ const page=await browser.newPage({viewport:{width:1280,height:720}});
+ await page.goto('http://127.0.0.1:5173');
+ await page.keyboard.press('Enter');
+ await page.waitForFunction(()=> {const a=document.querySelector('audio');return a && Number.isFinite(a.duration) && a.duration>2;});
+ await page.evaluate(()=>{const a=document.querySelector('audio');a.pause();a.currentTime=a.duration-.5;});
+ await page.waitForFunction(()=>Math.abs(document.querySelector('audio').volume-.25)<.03);
+ await page.evaluate(()=>{document.querySelector('audio').currentTime=0;});
+ await page.waitForFunction(()=>document.querySelector('audio').volume===.5);
+ await page.evaluate(()=>{const a=document.querySelector('audio');a.currentTime=a.duration-.85;});
+ await page.keyboard.press('p');
+ await page.waitForFunction(()=>{const a=document.querySelector('audio');return a.ended;});
+ assert.equal(await page.locator('audio').evaluate(a=>a.volume),0);
+ await page.keyboard.press('p');
+ await page.waitForFunction(()=>{const a=document.querySelector('audio');return !a.paused && a.volume===.5;});
+ await page.keyboard.press('Enter');
+ await page.waitForFunction(()=>document.querySelector('audio').volume===.5);
+ console.log('PASS: linear one-second fade, seek backwards, silence at end, replay and next-track volume reset.');
+} finally {await browser.close();}

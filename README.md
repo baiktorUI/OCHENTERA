@@ -1,6 +1,6 @@
-# Ochentera · Bingo musical
+# Ochentera · Quina musical
 
-Quina musical de 90 números, pensada per projectar en una única pantalla. Interfície en català, fons negre, taronja i violeta inspirats en https://uuhqe.framer.website/ i el logotip existent del projecte.
+Quina musical de 90 números, pensada per projectar en una única pantalla. Interfície en català, fons negre, taronja i violeta inspirats en https://uuhqe.framer.website/. La capçalera utilitza només text, sense logotip d’imatge.
 
 ## Desenvolupament
 
@@ -19,7 +19,7 @@ npm run lint
 | --- | --- |
 | Enter | Sortejar el següent número, sense repeticions |
 | L | Mostrar o tancar el premi de línia |
-| Q | Mostrar o tancar el premi de bingo / quina |
+| Q | Mostrar o tancar el premi de quina |
 | P | Reproduir o pausar la cançó |
 | F | Entrar o sortir de pantalla completa |
 | N | Demanar una nova partida amb confirmació |
@@ -27,7 +27,7 @@ npm run lint
 
 No hi ha botó per sortejar. La llegenda inferior mostra totes les dreceres. Els controls d’àudio i de confirmació també es poden utilitzar amb ratolí. En un diàleg, Enter activa el botó enfocat; no sorteja números.
 
-Els premis aturen l’àudio i el sorteig fins que es tanquen. Per reprendre la música, prem P. Les celebracions mostren una composició de gran format i dues ràfegues breus de confeti, amb neteja en tancar i respecte per la preferència de moviment reduït.
+Els premis aturen l’àudio i el sorteig fins que es tanquen. Per reprendre la música, prem P. Les celebracions ocupen només la capçalera i mantenen visibles el número actual, els anteriors i tot el tauler per comprovar el cartró. Inclouen dues ràfegues breus de confeti limitades a la capçalera, amb neteja en tancar i respecte per la preferència de moviment reduït.
 
 ## Projecció
 
@@ -39,7 +39,7 @@ Comprovat a 1920×1080, 1366×768, 1280×720, 1024×768, 800×600, 390×844 i 32
 
 La partida es desa al navegador i es recupera en tornar a carregar la mateixa adreça. Es valida l’historial desat i no es reinicia automàticament en arribar als 90 números. Si no es pot desar, la partida continua mentre la pàgina segueixi oberta.
 
-Es conserven els àudios `public/assets/audio/number-1.mp3` a `number-90.mp3` i les imatges equivalents a `public/assets/images`. Per canviar una cançó, substitueix el fitxer amb el mateix nom o edita `src/data/bingoContent.ts`.
+Es conserven els àudios `public/assets/audio/number-1.mp3` a `number-90.mp3` i les imatges equivalents a `public/assets/images`. Per canviar una cançó, substitueix el fitxer amb el mateix nom o edita `src/data/quinaContent.ts`.
 
 Un enllaç de Spotify no és una URL de MP3. La política de desenvolupadors de Spotify prohibeix integrar la plataforma en jocs, inclosos els musicals; aquesta aplicació no incorpora Spotify. Fonts consultades el 7 de setembre de 2026:
 
@@ -51,3 +51,7 @@ Un enllaç de Spotify no és una URL de MP3. La política de desenvolupadors de 
 La compilació comprova TypeScript de l’aplicació i de Vite. `tests/browser.mjs` executa proves amb Playwright i Chrome. Instal·la Playwright al teu entorn de proves, inicia el servidor al port 5173 i executa `node tests/browser.mjs`. `PLAYWRIGHT_MODULE` permet indicar una instal·lació externa; `BROWSER_CHANNEL` permet seleccionar un altre navegador compatible.
 
 Les proves comproven la llengua, absència del botó de sorteig, 90 números únics, persistència, reinici, premis, focus del diàleg, pausa de l’àudio, igualtat dels panells, absència de desbordaments en set resolucions, dades corruptes i errors d’àudio o imatge. Les captures es generen a `tests/` i no s’inclouen a Git.
+
+## Final suau de les cançons
+
+Totes les cançons redueixen el volum linealment durant el seu últim segon fins al silenci. El càlcul segueix el temps real de l’àudio i s’actualitza en pausar, reprendre, avançar, repetir o canviar de cançó. Els MP3 originals no es modifiquen. `tests/audio-fade.mjs` comprova la corba i el comportament real al navegador (requereix Node.js 24 per importar TypeScript directament).

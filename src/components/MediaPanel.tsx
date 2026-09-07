@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Disc3, Pause, Play } from 'lucide-react';
+import { attachFadeOut } from '../utils/audioFade';
 import { bingoContent } from '../data/bingoContent';
 interface Props {
     currentNumber: number | null;
@@ -32,12 +33,12 @@ export function MediaPanel({ currentNumber, paused }: Props) {
         if (!audio || !content)
             return;
         let active = true;
-        audio.volume = .5;
+        const detachFade = attachFadeOut(audio);
         void audio.play().catch((reason: unknown) => {
             if (active)
                 setError(reason instanceof DOMException && reason.name === 'NotAllowedError' ? 'Prem P per escoltar la cançó.' : 'No es pot carregar l’àudio. Comprova el fitxer o la connexió.');
         });
-        return () => { active = false; audio.pause(); };
+        return () => { active = false; detachFade(); audio.pause(); };
     }, [content]);
     useEffect(() => { if (paused)
         audioRef.current?.pause(); }, [paused]);

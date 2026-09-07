@@ -8,7 +8,7 @@ import { useNumberStore } from './utils/numberGenerator';
 import './index.css';
 export default function App() {
     const { history, draw, reset, storageError } = useNumberStore();
-    const [celebration, setCelebration] = useState<'line' | 'bingo' | null>(null);
+    const [celebration, setCelebration] = useState<'line' | 'quina' | null>(null);
     const [confirmReset, setConfirmReset] = useState(false);
     const [notice, setNotice] = useState('');
     const current = history[history.length - 1] ?? null;
@@ -50,7 +50,7 @@ export default function App() {
             if (key === 'l' && history.length)
                 setCelebration('line');
             if (key === 'q' && history.length)
-                setCelebration('bingo');
+                setCelebration('quina');
             if (key === 'f') {
                 event.preventDefault();
                 void fullscreen();
@@ -69,18 +69,19 @@ export default function App() {
             return;
         const burst = confetti.create(canvas, { resize: true });
         const fire = () => {
-            void burst({ particleCount: celebration === 'bingo' ? 110 : 65, spread: 100, origin: { x: .2, y: .65 }, colors: ['#ff5514', '#7060ff', '#ffffff', '#ffd25a'], disableForReducedMotion: true });
-            void burst({ particleCount: celebration === 'bingo' ? 110 : 65, spread: 100, origin: { x: .8, y: .65 }, colors: ['#ff5514', '#7060ff', '#ffffff', '#ffd25a'], disableForReducedMotion: true });
+            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .2, y: .65 }, colors: ['#ff5514', '#7060ff', '#ffffff', '#ffd25a'], disableForReducedMotion: true });
+            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .8, y: .65 }, colors: ['#ff5514', '#7060ff', '#ffffff', '#ffd25a'], disableForReducedMotion: true });
         };
         fire();
         const timer = window.setTimeout(fire, 850);
         return () => { window.clearTimeout(timer); burst.reset(); };
     }, [celebration]);
     return <div className="app-shell">
-    <header className="topbar">
-      <img className="brand-logo" src={`${import.meta.env.BASE_URL}assets/logo/logo.png`} alt="Uuh Quina Experiència Catalana"/>
+    <header className={`topbar ${celebration ? "has-prize" : ""}`}>
+      {celebration ? <section className={`prize-banner ${celebration}`} aria-labelledby="celebration-title"><canvas className="prize-confetti" aria-hidden="true" /><Trophy className="banner-trophy" /><h2 id="celebration-title" role="status">{celebration === 'line' ? 'LÍNIA!' : 'QUINA!'}</h2><span className="banner-help">HAN CANTAT PREMI!<small>Comproveu el cartró amb els números del tauler.</small></span><button className="primary-button" onClick={() => setCelebration(null)}>Tornem-hi!<kbd>Esc</kbd></button></section> : <>
       <div className="header-title"><span>LA QUINA QUE ES CANTA</span><h1>OCHENTERA<span>.</span></h1></div>
-      <div className="header-actions"><span className="session-pill"><i />{history.length === 90 ? 'PARTIDA COMPLETA' : 'BINGO MUSICAL'}</span><button className="icon-button" onClick={fullscreen} aria-label="Pantalla completa"><Maximize2 /></button><button className="icon-button" onClick={() => setConfirmReset(true)} disabled={!history.length} aria-label="Nova partida"><RotateCcw /></button></div>
+      <div className="header-actions"><span className="session-pill"><i />{history.length === 90 ? 'PARTIDA COMPLETA' : 'QUINA MUSICAL'}</span><button className="icon-button" onClick={fullscreen} aria-label="Pantalla completa"><Maximize2 /></button><button className="icon-button" onClick={() => setConfirmReset(true)} disabled={!history.length} aria-label="Nova partida"><RotateCcw /></button></div>
+      </>}
     </header>
     <main className="game-layout">
       <section className="play-column" aria-label="Número i música">
@@ -92,9 +93,8 @@ export default function App() {
         <section className="board-card" aria-labelledby="board-heading"><div className="board-heading"><h2 id="board-heading">EL TAULER<span> / </span><small>{90 - history.length} pendents</small></h2><span className="count"><strong>{history.length}</strong> / 90</span></div><BingoBoard markedNumbers={history}/><div className="board-legend"><span><i className="legend-current"/>Actual</span><span><i className="legend-marked"/>Ja ha sortit</span><span>90 NÚMEROS · UNA FESTA</span></div></section>
       </section>
     </main>
-    <footer className="shortcut-bar" aria-label="Dreceres de teclat"><span className="shortcut-label">TU PORTES<br />EL RITME</span><span><kbd>Enter</kbd>Següent número</span><span><kbd>L</kbd>Línia</span><span><kbd>Q</kbd>Bingo / Quina</span><span><kbd>P</kbd>Reproduir / Pausa</span><span><kbd>F</kbd>Pantalla completa</span><span><kbd>N</kbd>Nova partida</span><span><kbd>Esc</kbd>Tancar premi</span></footer>
+    <footer className="shortcut-bar" aria-label="Dreceres de teclat"><span className="shortcut-label">TU PORTES<br />EL RITME</span><span><kbd>Enter</kbd>Següent número</span><span><kbd>L</kbd>Línia</span><span><kbd>Q</kbd>Quina</span><span><kbd>P</kbd>Reproduir / Pausa</span><span><kbd>F</kbd>Pantalla completa</span><span><kbd>N</kbd>Nova partida</span><span><kbd>Esc</kbd>Tancar premi</span></footer>
     {(notice || storageError) && <div className="notice" role="status">{notice || 'No es pot desar la partida. Mantén aquesta pàgina oberta.'}<button onClick={() => setNotice('')} aria-label="Tancar avís">×</button></div>}
-    {celebration && <Modal label="celebration-title" className={`prize-dialog ${celebration}`} onClose={() => setCelebration(null)}><canvas className="prize-confetti" aria-hidden="true"/><div className="prize-content"><span className="prize-kicker"><Zap />QUE SE SENTI A TOTA LA SALA<Zap /></span><Trophy className="prize-trophy"/><p className="prize-intro">{celebration === 'line' ? 'HAN CANTAT' : 'AIXÒ ÉS UN'}</p><h2 id="celebration-title">{celebration === 'line' ? 'LÍNIA!' : 'BINGO!'}</h2><p className="prize-tagline">{celebration === 'line' ? 'UN APLAUDIMENT, QUE AIXÒ PROMET.' : 'LA SALA ÉS VOSTRA. QUINA FESTASSA!'}</p><p className="prize-help">Comproveu el cartró. La música està en pausa.</p><button autoFocus className="primary-button" onClick={() => setCelebration(null)}>Tornem-hi!<kbd>Esc</kbd></button></div></Modal>}
     {confirmReset && <Modal label="reset-title" onClose={() => setConfirmReset(false)}><h2 id="reset-title">TORNEM A COMENÇAR?</h2><p>S’esborraran els {history.length} números d’aquesta partida.</p><div className="dialog-actions"><button autoFocus className="secondary-button" onClick={() => setConfirmReset(false)}>Continuar la partida</button><button className="primary-button" onClick={() => { reset(); setConfirmReset(false); }}>Nova partida</button></div></Modal>}
   </div>;
 }

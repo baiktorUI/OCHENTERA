@@ -31,15 +31,18 @@ try {
   await page.reload();
   assert.equal(await page.locator('.marked').count(), 2, 'Reload restores history');
   await page.keyboard.press('l');
-  await page.getByRole('heading', { name: 'LÍNIA!' }).waitFor();
+  await page.getByText('LÍNIA!', {exact:true}).waitFor();
+  await fits();
+  assert.equal(await page.locator('.brand-logo').count(), 0);
+  assert.equal(await page.locator('body').innerText().then(t => /bingo/i.test(t)), false);
+  assert.equal(await page.locator('.bingo-board').evaluate(el => { const r=el.getBoundingClientRect(); return el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)); }), true, 'Prize must not cover the board');
   await page.screenshot({ path: 'tests/line.png' });
   assert.equal(await page.locator('audio').evaluate(a => a.paused), true);
-  await page.keyboard.press('Tab');
-  assert.equal(await page.evaluate(() => !!document.activeElement.closest('dialog')), true);
   await page.keyboard.press('Escape');
   await page.keyboard.press('q');
-  await page.getByRole('heading', { name: 'BINGO!' }).waitFor();
-  await page.screenshot({ path: 'tests/bingo.png' });
+  await page.getByText('QUINA!', {exact:true}).waitFor();
+  await fits();
+  await page.screenshot({ path: 'tests/quina.png' });
   await page.keyboard.press('q');
   assert.equal(await page.locator('dialog[open]').count(), 0);
   await page.keyboard.press('n');
@@ -72,5 +75,5 @@ try {
   assert.equal(await page.locator('.record').count(), 1);
   await fits();
   assert.deepEqual(errors, []);
-  console.log('PASS: Catalan, keyboard-only draw, 90 unique numbers, persistence, reset, prizes, modal focus, paused audio, equal panels and no overflow at 7 screen sizes, corrupt storage and media failures.');
+  console.log('PASS: Catalan, keyboard-only draw, 90 unique numbers, persistence, reset, prizes, unobscured prize banner, paused audio, equal panels and no overflow at 7 screen sizes, corrupt storage and media failures.');
 } finally { await browser.close(); }
