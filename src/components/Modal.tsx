@@ -1,6 +1,7 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-export function Modal({ children, label, onClose }: {
+export function Modal({ children, label, onClose, className = "" }: {
     children: ReactNode;
+    className?: string;
     label: string;
     onClose: () => void;
 }) {
@@ -10,7 +11,7 @@ export function Modal({ children, label, onClose }: {
         dialog?.showModal();
         return () => dialog?.close();
     }, []);
-    return <dialog ref={ref} className="dialog" aria-labelledby={label} onCancel={event => { event.preventDefault(); onClose(); }} onKeyDown={event => {
+    return <dialog ref={ref} className={`dialog ${className}`} aria-labelledby={label} onCancel={event => { event.preventDefault(); onClose(); }} onKeyDown={event => {
             if (event.key !== 'Tab')
                 return;
             const buttons = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)'));

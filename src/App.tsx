@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ArrowRight, Disc3, Maximize2, RotateCcw, Trophy, Sparkles, X } from 'lucide-react';
+import { Maximize2, RotateCcw, Trophy, Zap } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { Modal } from './components/Modal';
 import { BingoBoard } from './components/BingoBoard';
 import { MediaPanel } from './components/MediaPanel';
@@ -11,33 +12,7 @@ export default function App() {
     const [confirmReset, setConfirmReset] = useState(false);
     const [notice, setNotice] = useState('');
     const current = history[history.length - 1] ?? null;
-    const next = useCallback(() => { if (!celebration && !confirmReset)
-        draw(); }, [celebration, confirmReset, draw]);
-    const celebrate = useCallback((kind: 'line' | 'bingo') => { if (history.length)
-        setCelebration(previous => previous === kind ? null : kind); }, [history.length]);
-    useEffect(() => {
-        const onKey = (event: KeyboardEvent) => {
-            if (event.repeat || event.ctrlKey || event.metaKey || event.altKey || (event.target instanceof HTMLElement && event.target.closest('button, input, select, textarea, audio, [contenteditable="true"]')))
-                return;
-            if (event.key === 'Escape') {
-                setCelebration(null);
-                setConfirmReset(false);
-            }
-            if (confirmReset)
-                return;
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                next();
-            }
-            if (event.key.toLowerCase() === 'l')
-                celebrate('line');
-            if (event.key.toLowerCase() === 'q')
-                celebrate('bingo');
-        };
-        window.addEventListener('keydown', onKey);
-        return () => window.removeEventListener('keydown', onKey);
-    }, [next, celebrate, confirmReset]);
-    const fullscreen = async () => {
+    const fullscreen = useCallback(async () => {
         try {
             if (document.fullscreenElement)
                 await document.exitFullscreen();
@@ -45,28 +20,81 @@ export default function App() {
                 await document.documentElement.requestFullscreen();
         }
         catch {
-            setNotice('La pantalla completa no está disponible en este navegador.');
+            setNotice('Aquest navegador no permet la pantalla completa.');
         }
-    };
+    }, []);
+    useEffect(() => {
+        const onKey = (event: KeyboardEvent) => {
+            if (event.repeat || event.ctrlKey || event.metaKey || event.altKey)
+                return;
+            if (event.key === 'Escape') {
+                setCelebration(null);
+                setConfirmReset(false);
+                return;
+            }
+            if (confirmReset)
+                return;
+            const key = event.key.toLowerCase();
+            if (celebration) {
+                if (key === 'l' || key === 'q')
+                    setCelebration(null);
+                return;
+            }
+            if (event.target instanceof HTMLElement && event.target.closest('input, select, textarea, [contenteditable="true"]'))
+                return;
+            if (key === 'enter') {
+                // Enter belongs to the draw; dialog buttons keep their native activation.
+                event.preventDefault();
+                draw();
+            }
+            if (key === 'l' && history.length)
+                setCelebration('line');
+            if (key === 'q' && history.length)
+                setCelebration('bingo');
+            if (key === 'f') {
+                event.preventDefault();
+                void fullscreen();
+            }
+            if (key === 'n' && history.length)
+                setConfirmReset(true);
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [draw, celebration, confirmReset, history.length, fullscreen]);
+    useEffect(() => {
+        if (!celebration || window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+            return;
+        const canvas = document.querySelector<HTMLCanvasElement>('.prize-confetti');
+        if (!canvas)
+            return;
+        const burst = confetti.create(canvas, { resize: true });
+        const fire = () => {
+            void burst({ particleCount: celebration === 'bingo' ? 110 : 65, spread: 100, origin: { x: .2, y: .65 }, colors: ['#ff5514', '#7060ff', '#ffffff', '#ffd25a'], disableForReducedMotion: true });
+            void burst({ particleCount: celebration === 'bingo' ? 110 : 65, spread: 100, origin: { x: .8, y: .65 }, colors: ['#ff5514', '#7060ff', '#ffffff', '#ffd25a'], disableForReducedMotion: true });
+        };
+        fire();
+        const timer = window.setTimeout(fire, 850);
+        return () => { window.clearTimeout(timer); burst.reset(); };
+    }, [celebration]);
     return <div className="app-shell">
     <header className="topbar">
-      <a className="brand" href="./" aria-label="Ochentera, inicio"><span className="brand-icon"><Disc3 /></span><span>ochentera<span className="brand-dot">.</span><small>BINGO MUSICAL</small></span></a>
-      <div className="header-actions"><span className="session-pill"><i />{history.length === 90 ? 'Partida completa' : 'Todo listo para jugar'}</span><button className="icon-button" onClick={fullscreen} aria-label="Alternar pantalla completa"><Maximize2 size={18}/></button></div>
+      <img className="brand-logo" src={`${import.meta.env.BASE_URL}assets/logo/logo.png`} alt="Uuh Quina Experiència Catalana"/>
+      <div className="header-title"><span>LA QUINA QUE ES CANTA</span><h1>OCHENTERA<span>.</span></h1></div>
+      <div className="header-actions"><span className="session-pill"><i />{history.length === 90 ? 'PARTIDA COMPLETA' : 'BINGO MUSICAL'}</span><button className="icon-button" onClick={fullscreen} aria-label="Pantalla completa"><Maximize2 /></button><button className="icon-button" onClick={() => setConfirmReset(true)} disabled={!history.length} aria-label="Nova partida"><RotateCcw /></button></div>
     </header>
-    <main>
-      <div className="page-heading"><div><p className="eyebrow">LOS TEMAZOS DE SIEMPRE</p><h1>La música pone el número.</h1><p>Escucha, encuentra y canta. Que empiece la fiesta.</p></div><button className="text-button" onClick={() => setConfirmReset(true)} disabled={!history.length}><RotateCcw size={16}/>Nueva partida</button></div>
-      {(notice || storageError) && <p role="status" className="notice">{notice || 'No se puede guardar en este navegador. La partida seguirá funcionando hasta cerrar la página.'}</p>}
-      <div className="game-layout">
-        <section className="play-column" aria-label="Sorteo y música">
-          <div className="draw-card"><div className="card-top"><span className="eyebrow">NÚMERO ACTUAL</span><span className="live-dot">{history.length ? 'EN JUEGO' : 'A TU RITMO'}</span></div><div className="draw-number" key={current} aria-live="polite">{current === null ? '—' : String(current).padStart(2, '0')}</div><p>{history.length === 90 ? '¡Han salido todos los números!' : current ? 'Un número, un temazo.' : 'Tu próximo temazo está a un clic.'}</p><button className="primary-button" onClick={next} disabled={!!celebration || history.length === 90}>{history.length === 90 ? 'Sorteo completado' : history.length ? 'Siguiente número' : 'Empezar partida'}<ArrowRight size={19}/></button><span className="keyboard-hint">También puedes pulsar <kbd>Enter</kbd></span></div>
-          <MediaPanel currentNumber={current} paused={!!celebration}/>
-        </section>
-        <section className="board-card" aria-labelledby="board-heading"><div className="board-heading"><div><p className="eyebrow">SIGUE LA PARTIDA</p><h2 id="board-heading">El tablero</h2></div><div className="count"><strong>{history.length}</strong><span> / 90</span></div></div><progress value={history.length} max={90} aria-label="Números sorteados"/><BingoBoard markedNumbers={history}/><div className="board-legend"><span><i className="legend-current"/>Actual</span><span><i className="legend-marked"/>Ha salido</span><span>{90 - history.length} pendientes</span></div><div className="history"><span className="eyebrow">ÚLTIMOS NÚMEROS</span><div>{history.length > 1 ? history.slice(0, -1).slice(-6).reverse().map(n => <span className="history-number" key={n}>{String(n).padStart(2, '0')}</span>) : <p>Aquí aparecerán los números anteriores.</p>}</div></div></section>
-      </div>
-      <section className="celebration-bar"><div><Sparkles size={21}/><span><strong>¿Hay premio en la sala?</strong><small>Pausa la música y celebra el momento.</small></span></div><div><button className="secondary-button" disabled={!history.length} onClick={() => celebrate('line')}>¡Línea!<kbd>L</kbd></button><button className="bingo-button" disabled={!history.length} onClick={() => celebrate('bingo')}><Trophy size={17}/>¡Bingo!<kbd>Q</kbd></button></div></section>
+    <main className="game-layout">
+      <section className="play-column" aria-label="Número i música">
+        <section className="draw-card" aria-label="Número actual"><span className="panel-label">ARA SONA EL NÚMERO</span><div className="draw-number" key={current} aria-live="polite">{current === null ? '—' : String(current).padStart(2, '0')}</div><span className="draw-caption">{history.length === 90 ? 'JA HAN SORTIT TOTS!' : current ? 'ESCOLTA. MARCA. CANTA.' : 'PREM ENTER I QUE COMENCI LA FESTA.'}</span><Zap className="draw-zap" aria-hidden="true"/></section>
+        <MediaPanel currentNumber={current} paused={!!celebration || confirmReset}/>
+      </section>
+      <section className="board-column" aria-label="Seguiment de la partida">
+        <section className="history" aria-label="Últims números"><div className="history-title"><span className="panel-label">ÚLTIMS NÚMEROS</span><span>DEL MÉS RECENT A L’ANTERIOR</span></div><div className="history-list">{Array.from({ length: 5 }, (_, i) => <span className="history-number" key={i}>{history[history.length - 2 - i] === undefined ? '—' : String(history[history.length - 2 - i]).padStart(2, '0')}</span>)}</div></section>
+        <section className="board-card" aria-labelledby="board-heading"><div className="board-heading"><h2 id="board-heading">EL TAULER<span> / </span><small>{90 - history.length} pendents</small></h2><span className="count"><strong>{history.length}</strong> / 90</span></div><BingoBoard markedNumbers={history}/><div className="board-legend"><span><i className="legend-current"/>Actual</span><span><i className="legend-marked"/>Ja ha sortit</span><span>90 NÚMEROS · UNA FESTA</span></div></section>
+      </section>
     </main>
-    <footer><span>90 números. Muchísimos recuerdos.</span><span>Hecho para cantar juntos.</span></footer>
-    {celebration && <Modal label="celebration-title" onClose={() => setCelebration(null)}><Trophy className="trophy" size={48}/><p className="eyebrow">QUE SUENE EL APLAUSO</p><h2 id="celebration-title">{celebration === 'line' ? '¡Línea cantada!' : '¡Han cantado bingo!'}</h2><p>La partida está en pausa. Comprueba el cartón antes de continuar.</p><button autoFocus className="primary-button" onClick={() => setCelebration(null)}>Continuar partida<ArrowRight size={18}/></button></Modal>}
-    {confirmReset && <Modal label="reset-title" onClose={() => setConfirmReset(false)}><button className="dialog-close icon-button" aria-label="Cerrar" onClick={() => setConfirmReset(false)}><X size={18}/></button><h2 id="reset-title">¿Empezamos de nuevo?</h2><p>Se borrarán los {history.length} números sorteados de esta partida.</p><div className="dialog-actions"><button autoFocus className="secondary-button" onClick={() => setConfirmReset(false)}>Volver a la partida</button><button className="primary-button" onClick={() => { reset(); setCelebration(null); setConfirmReset(false); }}>Nueva partida</button></div></Modal>}
+    <footer className="shortcut-bar" aria-label="Dreceres de teclat"><span className="shortcut-label">TU PORTES<br />EL RITME</span><span><kbd>Enter</kbd>Següent número</span><span><kbd>L</kbd>Línia</span><span><kbd>Q</kbd>Bingo / Quina</span><span><kbd>P</kbd>Reproduir / Pausa</span><span><kbd>F</kbd>Pantalla completa</span><span><kbd>N</kbd>Nova partida</span><span><kbd>Esc</kbd>Tancar premi</span></footer>
+    {(notice || storageError) && <div className="notice" role="status">{notice || 'No es pot desar la partida. Mantén aquesta pàgina oberta.'}<button onClick={() => setNotice('')} aria-label="Tancar avís">×</button></div>}
+    {celebration && <Modal label="celebration-title" className={`prize-dialog ${celebration}`} onClose={() => setCelebration(null)}><canvas className="prize-confetti" aria-hidden="true"/><div className="prize-content"><span className="prize-kicker"><Zap />QUE SE SENTI A TOTA LA SALA<Zap /></span><Trophy className="prize-trophy"/><p className="prize-intro">{celebration === 'line' ? 'HAN CANTAT' : 'AIXÒ ÉS UN'}</p><h2 id="celebration-title">{celebration === 'line' ? 'LÍNIA!' : 'BINGO!'}</h2><p className="prize-tagline">{celebration === 'line' ? 'UN APLAUDIMENT, QUE AIXÒ PROMET.' : 'LA SALA ÉS VOSTRA. QUINA FESTASSA!'}</p><p className="prize-help">Comproveu el cartró. La música està en pausa.</p><button autoFocus className="primary-button" onClick={() => setCelebration(null)}>Tornem-hi!<kbd>Esc</kbd></button></div></Modal>}
+    {confirmReset && <Modal label="reset-title" onClose={() => setConfirmReset(false)}><h2 id="reset-title">TORNEM A COMENÇAR?</h2><p>S’esborraran els {history.length} números d’aquesta partida.</p><div className="dialog-actions"><button autoFocus className="secondary-button" onClick={() => setConfirmReset(false)}>Continuar la partida</button><button className="primary-button" onClick={() => { reset(); setConfirmReset(false); }}>Nova partida</button></div></Modal>}
   </div>;
 }
