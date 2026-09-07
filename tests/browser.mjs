@@ -1,0 +1,51 @@
+import { createRequire } from 'node:module';
+import assert from 'node:assert/strict';
+const require = createRequire(import.meta.url);
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const browser = await chromium.launch({ headless: true, channel: process.env.BROWSER_CHANNEL || "msedge" });
+const page = await browser.newPage({ viewport: { width: 1440, height: 1100 } });
+const errors = [];
+page.on('pageerror', error => errors.push(error.message));
+try {
+  await page.goto('http://127.0.0.1:5173');
+  await page.screenshot({ path: 'tests/desktop.png', fullPage: true });
+  await page.getByRole('button', { name: 'Empezar partida' }).click();
+  await page.waitForFunction(() => JSON.parse(localStorage.getItem('ochentera-game-v1')).length === 1);
+  await page.getByRole('button', { name: 'Siguiente número' }).press('Enter');
+  assert.equal(await page.locator('.marked').count(), 2, 'Focused button must draw exactly once');
+  await page.reload();
+  assert.equal(await page.locator('.marked').count(), 2, 'Reload restores history');
+  await page.getByRole('button', { name: '¡Bingo!' }).click();
+  assert.equal(await page.locator('dialog[open]').count(), 1);
+  await page.keyboard.press('Tab');
+  assert.equal(await page.evaluate(() => !!document.activeElement.closest('dialog')), true, 'Modal traps focus');
+  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('dialog[open]').count(), 0);
+  await page.getByRole('button', { name: 'Nueva partida', exact: true }).click();
+  await page.getByRole('button', { name: 'Volver a la partida' }).click();
+  assert.equal(await page.locator('.marked').count(), 2);
+  await page.getByRole('button', { name: 'Nueva partida', exact: true }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Nueva partida', exact: true }).click();
+  assert.equal(await page.locator('.marked').count(), 0);
+  for (let i = 0; i < 90; i++) await page.locator('.draw-card .primary-button').click();
+  const history = await page.evaluate(() => JSON.parse(localStorage.getItem('ochentera-game-v1')));
+  assert.equal(history.length, 90); assert.equal(new Set(history).size, 90);
+  assert.equal(await page.getByRole('button', { name: 'Sorteo completado' }).isDisabled(), true);
+  await page.reload();
+  assert.equal(await page.locator('.marked').count(), 90);
+  for (const width of [390, 320]) {
+    await page.setViewportSize({ width, height: 844 });
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `No overflow at ${width}`);
+  }
+  await page.screenshot({ path: 'tests/mobile.png', fullPage: true });
+  await page.evaluate(() => localStorage.setItem('ochentera-game-v1', '[1,1,99]'));
+  await page.reload();
+  assert.equal(await page.locator('.marked').count(), 0, 'Reject corrupted storage');
+  await page.route('**/assets/audio/*.mp3', route => route.abort());
+  await page.route('**/assets/images/*.jpg', route => route.abort());
+  await page.getByRole('button', { name: 'Empezar partida' }).click();
+  await page.getByText('No se ha podido cargar el audio.', { exact: false }).waitFor();
+  assert.equal(await page.locator('.record').count(), 1);
+  assert.deepEqual(errors, []);
+  console.log('PASS: unique 90-number draw, exhaustion, persistence, reset, keyboard, modal focus, responsive layout, corrupt storage, media failure, no browser exceptions.');
+} finally { await browser.close(); }

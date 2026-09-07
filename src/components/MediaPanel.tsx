@@ -1,120 +1,31 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Disc3, Music2 } from 'lucide-react';
 import { bingoContent } from '../data/bingoContent';
-import type { BingoNumber } from '../data/types';
-
-interface MediaPanelProps {
-  currentNumber: number | null;
-  showQuinaMessage: boolean;
+interface Props {
+    currentNumber: number | null;
+    paused: boolean;
 }
-
-export const MediaPanel: React.FC<MediaPanelProps> = ({ currentNumber, showQuinaMessage }) => {
-  const [content, setContent] = useState<BingoNumber | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    // Cleanup function to stop audio when component unmounts
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (currentNumber) {
-      // Stop previous audio if playing
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-
-      setIsLoading(true);
-      setContent(bingoContent[currentNumber]);
-      setProgress(0);
-      setDuration(0);
-
-      // Create new audio element
-      const audio = new Audio(bingoContent[currentNumber].song);
-      audio.volume = 0.5;
-      audioRef.current = audio;
-
-      // Set up event listeners
-      audio.addEventListener('loadedmetadata', () => {
-        setDuration(audio.duration);
-      });
-
-      audio.addEventListener('timeupdate', () => {
-        setProgress(audio.currentTime);
-      });
-
-      audio.addEventListener('ended', () => {
-        audio.currentTime = 0;
-        setProgress(0);
-      });
-
-      // Play audio
-      audio.play().catch(error => {
-        console.error('Error playing audio:', error);
-      });
-    }
-  }, [currentNumber]);
-
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
-
-  if (showQuinaMessage) {
-    return (
-      <div className="video-box">
-        <span className="han-cantat-quina">HAN CANTAT QUINA! 🎉🎉🎉</span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="video-box">
-      {currentNumber && content ? (
-        <>
-          <img
-            src={content.image}
-            alt={`Número ${currentNumber}`}
-            className="w-full h-full object-cover rounded-2xl"
-            onLoad={() => setIsLoading(false)}
-          />
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-black bg-opacity-50">
-            <div className="flex items-center gap-2">
-              <div className="text-xs text-white font-medium">
-                {formatTime(progress)}
-              </div>
-              <div className="flex-1 h-2 bg-white bg-opacity-20 rounded">
-                <div 
-                  className="h-full bg-white rounded transition-all duration-100"
-                  style={{ 
-                    width: `${(progress / duration) * 100}%`,
-                    transition: 'width 0.1s linear'
-                  }}
-                />
-              </div>
-              <div className="text-xs text-white font-medium">
-                {formatTime(duration)}
-              </div>
-            </div>
-          </div>
-          {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent"></div>
-            </div>
-          )}
-        </>
-      ) : null}
-    </div>
-  );
-};
-
-export default MediaPanel;
+export function MediaPanel({ currentNumber, paused }: Props) {
+    const audioRef = useRef<HTMLAudioElement>(null);
+    const [error, setError] = useState('');
+    const [imageError, setImageError] = useState(false);
+    const content = currentNumber === null ? null : bingoContent[currentNumber];
+    useEffect(() => {
+        const audio = audioRef.current;
+        setError('');
+        setImageError(false);
+        if (!audio || !content)
+            return;
+        let active = true;
+        audio.volume = 0.5;
+        audio.play().catch((reason: unknown) => { if (active)
+            setError(reason instanceof DOMException && reason.name === 'NotAllowedError' ? 'Pulsa reproducir para escuchar la canción.' : 'No se ha podido cargar el audio. Comprueba el archivo o tu conexión.'); });
+        return () => { active = false; audio.pause(); };
+    }, [content]);
+    useEffect(() => { if (paused)
+        audioRef.current?.pause(); }, [paused]);
+    return <section className="media-card" aria-label="Reproductor musical"><div className="media-art">{content && !imageError ? <img key={content.image} src={content.image} alt={`Imagen de la canción del número ${currentNumber}`} onError={() => setImageError(true)}/> : <div className="record"><Disc3 size={94} strokeWidth={0.7}/></div>}<span className="media-badge"><Music2 size={13}/>BINGO MUSICAL</span></div><div className="media-info"><p className="eyebrow">{content ? 'LA CANCIÓN DEL NÚMERO' : 'DALE AL PLAY A LOS RECUERDOS'}</p><h2>{currentNumber ? `Temazo ${String(currentNumber).padStart(2, '0')}` : 'La próxima canción te espera'}</h2>{content ? <audio key={content.song} ref={audioRef} src={content.song} controls preload="metadata" onPlay={() => { if (paused)
+        audioRef.current?.pause();
+    else
+        setError(''); }} onError={() => setError('No se ha podido cargar el audio. Comprueba el archivo o tu conexión.')} aria-label={`Reproducir canción ${currentNumber}`}/> : <p>Sortea un número para descubrirla.</p>}{error && <p className="audio-error" role="status">{error}</p>}{paused && <p className="audio-error">Música en pausa durante la celebración.</p>}</div></section>;
+}
