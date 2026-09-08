@@ -59,3 +59,5 @@ Totes les cançons redueixen el volum linealment durant el seu últim segon fins
 ## Tipografia
 
 Inter Tight (400–700) i JetBrains Mono (400–500) s’inclouen en format WOFF2 al projecte, amb les seves llicències SIL Open Font License a `src/assets/fonts/`. No es fan peticions a Google Fonts durant la partida.
+
+Totes les cançons també tenen un fade in lineal de 0,8 segons des del silenci fins al volum normal. Es torna a aplicar en repetir la cançó des del principi; en reprendre a mig tema, es respecta el temps actual.

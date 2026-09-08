@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Disc3, Pause, Play } from 'lucide-react';
-import { attachFadeOut } from '../utils/audioFade';
+import { attachAudioFades } from '../utils/audioFade';
 import { bingoContent } from '../data/bingoContent';
 interface Props {
     currentNumber: number | null;
@@ -33,7 +33,7 @@ export function MediaPanel({ currentNumber, paused }: Props) {
         if (!audio || !content)
             return;
         let active = true;
-        const detachFade = attachFadeOut(audio);
+        const detachFade = attachAudioFades(audio);
         void audio.play().catch((reason: unknown) => {
             if (active)
                 setError(reason instanceof DOMException && reason.name === 'NotAllowedError' ? 'Prem P per escoltar la cançó.' : 'No es pot carregar l’àudio. Comprova el fitxer o la connexió.');

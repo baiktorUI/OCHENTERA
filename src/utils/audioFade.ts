@@ -1,10 +1,12 @@
-/** Keep the final second tied to media time, including seeking, pause and replay. */
+/** Media-time envelope: 0.8s fade in and 1s fade out, including seek and replay. */
 export function fadeVolume(currentTime: number, duration: number, baseVolume = 0.5): number {
-  if (!Number.isFinite(duration) || duration <= 0) return baseVolume;
-  return baseVolume * Math.max(0, Math.min(1, duration - currentTime));
+  const fadeIn = Math.max(0, Math.min(1, currentTime / 0.8));
+  const fadeOut = Number.isFinite(duration) && duration > 0
+    ? Math.max(0, Math.min(1, duration - currentTime)) : 1;
+  return baseVolume * Math.min(fadeIn, fadeOut);
 }
 
-export function attachFadeOut(audio: HTMLAudioElement): () => void {
+export function attachAudioFades(audio: HTMLAudioElement): () => void {
   let frame: number | null = null;
   const update = () => { audio.volume = fadeVolume(audio.currentTime, audio.duration); };
   const stop = () => { if (frame !== null) cancelAnimationFrame(frame); frame = null; };
