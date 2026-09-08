@@ -20,6 +20,8 @@ async function fits() {
 }
 try {
   await page.goto('http://127.0.0.1:5173');
+  await page.evaluate(() => document.fonts.ready);
+  assert.equal(await page.evaluate(() => document.fonts.check('500 16px "Inter Tight"') && document.fonts.check('400 16px "JetBrains Mono"')), true, 'Local reference fonts are loaded');
   assert.equal(await page.locator('html').getAttribute('lang'), 'ca');
   assert.equal(await page.getByRole('button', { name: /següent|empezar|siguiente/i }).count(), 0);
   await fits();

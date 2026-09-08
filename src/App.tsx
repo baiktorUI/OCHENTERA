@@ -79,8 +79,8 @@ export default function App() {
             return;
         const burst = confetti.create(canvas, { resize: true });
         const fire = () => {
-            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .2, y: .65 }, colors: ['#ff5514', '#7060ff', '#ffffff', '#ffd25a'], disableForReducedMotion: true });
-            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .8, y: .65 }, colors: ['#ff5514', '#7060ff', '#ffffff', '#ffd25a'], disableForReducedMotion: true });
+            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .2, y: .65 }, colors: ['#f4551d', '#e9e2d3', '#37372f', '#c1b69b'], disableForReducedMotion: true });
+            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .8, y: .65 }, colors: ['#f4551d', '#e9e2d3', '#37372f', '#c1b69b'], disableForReducedMotion: true });
         };
         fire();
         const timer = window.setTimeout(fire, 850);
@@ -89,7 +89,7 @@ export default function App() {
     return <div className="app-shell">
     <header className={`topbar ${celebration ? "has-prize" : ""}`}>
       {celebration ? <section className={`prize-banner ${celebration}`} aria-labelledby="celebration-title"><Trophy className="banner-trophy" /><h2 id="celebration-title" role="status">{celebration === 'line' ? 'LÍNIA!' : 'QUINA!'}</h2><span className="banner-help">COMPROVANT EL CARTRÓ<small>Partida en pausa · Reviseu els números del tauler.</small></span><button className="primary-button" onClick={() => setCelebration(null)}>Tornem-hi!<kbd>Esc</kbd></button></section> : <>
-      <div className="header-title"><span>LA QUINA QUE ES CANTA</span><h1>OCHENTERA<span>.</span></h1></div>
+      <div className="header-title"><span>LA QUINA QUE ES CANTA</span><h1>Ochentera<span>.</span></h1></div>
       <div className="header-actions"><span className="session-pill"><i />{history.length === 90 ? 'PARTIDA COMPLETA' : 'QUINA MUSICAL'}</span><button className="icon-button" onClick={fullscreen} aria-label="Pantalla completa"><Maximize2 /></button><button className="icon-button" onClick={() => setConfirmReset(true)} disabled={!history.length} aria-label="Nova partida"><RotateCcw /></button></div>
       </>}
     </header>
@@ -100,7 +100,7 @@ export default function App() {
       </section>
       <section className="board-column" aria-label="Seguiment de la partida">
         <section className="history" aria-label="Últims números"><div className="history-title"><span className="panel-label">ÚLTIMS NÚMEROS</span><span>DEL MÉS RECENT A L’ANTERIOR</span></div><div className="history-list">{Array.from({ length: 5 }, (_, i) => <span className="history-number" key={i}>{history[history.length - 2 - i] === undefined ? '—' : String(history[history.length - 2 - i]).padStart(2, '0')}</span>)}</div></section>
-        <section className="board-card" aria-labelledby="board-heading"><div className="board-heading"><h2 id="board-heading">EL TAULER<span> / </span><small>{90 - history.length} pendents</small></h2><span className="count"><strong>{history.length}</strong> / 90</span></div><BingoBoard markedNumbers={history}/><div className="board-legend"><span><i className="legend-current"/>Actual</span><span><i className="legend-marked"/>Ja ha sortit</span><span>90 NÚMEROS · UNA FESTA</span></div></section>
+        <section className="board-card" aria-labelledby="board-heading"><div className="board-heading"><h2 id="board-heading">El tauler<span> / </span><small>{90 - history.length} pendents</small></h2><span className="count"><strong>{history.length}</strong> / 90</span></div><BingoBoard markedNumbers={history}/><div className="board-legend"><span><i className="legend-current"/>Actual</span><span><i className="legend-marked"/>Ja ha sortit</span><span>90 NÚMEROS · UNA FESTA</span></div></section>
       </section>
     </main>
     <footer className="shortcut-bar" aria-label="Dreceres de teclat"><span className="shortcut-label">TU PORTES<br />EL RITME</span><span><kbd>Enter</kbd>Següent número</span><span><kbd>L</kbd>Línia</span><span><kbd>Q</kbd>Quina</span><span><kbd>P</kbd>Reproduir / Pausa</span><span><kbd>F</kbd>Pantalla completa</span><span><kbd>N</kbd>Nova partida</span><span><kbd>Esc</kbd>Tancar premi</span></footer>

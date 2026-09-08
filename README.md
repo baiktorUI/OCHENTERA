@@ -1,6 +1,6 @@
 # Ochentera · Quina musical
 
-Quina musical de 90 números, pensada per projectar en una única pantalla. Interfície en català, fons negre, taronja i violeta inspirats en https://uuhqe.framer.website/. La capçalera utilitza només text, sense logotip d’imatge.
+Quina musical de 90 números, pensada per projectar en una única pantalla. Interfície en català amb l’estètica de https://aesthetic-cards.vercel.app/: fons gris carbó amb quadrícula, targetes crema i taronja, cantonades retallades, trames de punts i tipografia Inter Tight i JetBrains Mono. La capçalera utilitza només text, sense logotip d’imatge.
 
 ## Desenvolupament
 
@@ -55,3 +55,7 @@ Les proves comproven la llengua, absència del botó de sorteig, 90 números ún
 ## Final suau de les cançons
 
 Totes les cançons redueixen el volum linealment durant el seu últim segon fins al silenci. El càlcul segueix el temps real de l’àudio i s’actualitza en pausar, reprendre, avançar, repetir o canviar de cançó. Els MP3 originals no es modifiquen. `tests/audio-fade.mjs` comprova la corba i el comportament real al navegador (requereix Node.js 24 per importar TypeScript directament).
+
+## Tipografia
+
+Inter Tight (400–700) i JetBrains Mono (400–500) s’inclouen en format WOFF2 al projecte, amb les seves llicències SIL Open Font License a `src/assets/fonts/`. No es fan peticions a Google Fonts durant la partida.
