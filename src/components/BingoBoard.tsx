@@ -1,27 +1,13 @@
-import React from 'react';
-
-interface BingoBoardProps {
-  markedNumbers: number[];
-  showQuinaMessage: boolean;
+import { memo } from 'react';
+interface Props {
+    markedNumbers: number[];
 }
-
-export const BingoBoard: React.FC<BingoBoardProps> = ({ markedNumbers, showQuinaMessage }) => {
-  return (
-    <div className="bingo-board">
-      {[...Array(90)].map((_, i) => {
-        const number = i + 1;
-        const isMarked = markedNumbers.includes(number);
-        return (
-          <div
-            key={number}
-            className={`bingo-number ${isMarked ? 'marked' : ''} ${
-              !isMarked && showQuinaMessage ? 'faded' : ''
-            }`}
-          >
-            {number.toString().padStart(2, '0')}
-          </div>
-        );
-      })}
-    </div>
-  );
-};
+const numbers = Array.from({ length: 90 }, (_, i) => i + 1);
+export const BingoBoard = memo(({ markedNumbers }: Props) => {
+    const marked = new Set(markedNumbers);
+    const current = markedNumbers[markedNumbers.length - 1];
+    return <div className="bingo-board" aria-label="Tauler de 90 números">{numbers.map(number => <div key={number} aria-label={`${number}${number === current ? ', actual' : marked.has(number) ? ', ja ha sortit' : ', pendent'}`} className={`bingo-number ${marked.has(number) ? 'marked' : ''} ${number === current ? 'current' : ''}`}>
+      {String(number).padStart(2, '0')}
+    </div>)}</div>;
+});
+BingoBoard.displayName = 'BingoBoard';
