@@ -6,6 +6,7 @@ import { BingoBoard } from './components/BingoBoard';
 import { MediaPanel } from './components/MediaPanel';
 import { useNumberStore } from './utils/numberGenerator';
 import './index.css';
+import './board-theme.css';
 export default function App() {
     const { history, draw, reset, storageError } = useNumberStore();
     const [celebration, setCelebration] = useState<'line' | 'quina' | null>(null);
@@ -79,8 +80,8 @@ export default function App() {
             return;
         const burst = confetti.create(canvas, { resize: true });
         const fire = () => {
-            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .2, y: .65 }, colors: ['#f4551d', '#e9e2d3', '#37372f', '#c1b69b'], disableForReducedMotion: true });
-            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .8, y: .65 }, colors: ['#f4551d', '#e9e2d3', '#37372f', '#c1b69b'], disableForReducedMotion: true });
+            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .2, y: .65 }, colors: ['#246bfe', '#a7c8ff', '#ddedba', '#ffffff'], disableForReducedMotion: true });
+            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .8, y: .65 }, colors: ['#246bfe', '#a7c8ff', '#ddedba', '#ffffff'], disableForReducedMotion: true });
         };
         fire();
         const timer = window.setTimeout(fire, 850);
@@ -89,21 +90,21 @@ export default function App() {
     return <div className="app-shell">
     <header className={`topbar ${celebration ? "has-prize" : ""}`}>
       {celebration ? <section className={`prize-banner ${celebration}`} aria-labelledby="celebration-title"><Trophy className="banner-trophy" /><h2 id="celebration-title" role="status">{celebration === 'line' ? 'LÍNIA!' : 'QUINA!'}</h2><span className="banner-help">COMPROVANT EL CARTRÓ<small>Partida en pausa · Reviseu els números del tauler.</small></span><button className="primary-button" onClick={() => setCelebration(null)}>Tornem-hi!<kbd>Esc</kbd></button></section> : <>
-      <div className="header-title"><span>LA QUINA QUE ES CANTA</span><h1>Ochentera<span>.</span></h1></div>
-      <div className="header-actions"><span className="session-pill"><i />{history.length === 90 ? 'PARTIDA COMPLETA' : 'QUINA MUSICAL'}</span><button className="icon-button" onClick={fullscreen} aria-label="Pantalla completa"><Maximize2 /></button><button className="icon-button" onClick={() => setConfirmReset(true)} disabled={!history.length} aria-label="Nova partida"><RotateCcw /></button></div>
+      <div className="header-title"><span>Quina musical · En directe</span><h1>Ochentera<span>.</span></h1></div>
+      <div className="header-actions"><span className="session-pill"><i />{history.length === 90 ? 'Partida completa' : 'Quina musical'}</span><button className="icon-button" onClick={fullscreen} aria-label="Pantalla completa"><Maximize2 /></button><button className="icon-button" onClick={() => setConfirmReset(true)} disabled={!history.length} aria-label="Nova partida"><RotateCcw /></button></div>
       </>}
     </header>
     <main className={`game-layout ${celebration ? "checking-card" : ""}`}>
       <section className="play-column" aria-label="Número i música">
-        <section className="draw-card" aria-label="Número actual"><span className="panel-label">ARA SONA EL NÚMERO</span><div className="draw-number" key={current} aria-live="polite">{current === null ? '—' : String(current).padStart(2, '0')}</div><span className="draw-caption">{history.length === 90 ? 'JA HAN SORTIT TOTS!' : current ? 'ESCOLTA. MARCA. CANTA.' : 'PREM ENTER I QUE COMENCI LA FESTA.'}</span><Zap className="draw-zap" aria-hidden="true"/></section>
+        <section className="draw-card" aria-label="Número actual"><span className="panel-label">Número actual</span><div className="draw-number" key={current} aria-live="polite">{current === null ? '—' : String(current).padStart(2, '0')}</div><span className="draw-caption">{history.length === 90 ? 'Ja han sortit tots els números' : current ? 'Escolta, marca i canta.' : 'Prem Enter per començar la partida'}</span><Zap className="draw-zap" aria-hidden="true"/></section>
         <MediaPanel currentNumber={current} paused={!!celebration || confirmReset}/>
       </section>
       <section className="board-column" aria-label="Seguiment de la partida">
-        <section className="history" aria-label="Últims números"><div className="history-title"><span className="panel-label">ÚLTIMS NÚMEROS</span><span>DEL MÉS RECENT A L’ANTERIOR</span></div><div className="history-list">{Array.from({ length: 5 }, (_, i) => <span className="history-number" key={i}>{history[history.length - 2 - i] === undefined ? '—' : String(history[history.length - 2 - i]).padStart(2, '0')}</span>)}</div></section>
-        <section className="board-card" aria-labelledby="board-heading"><div className="board-heading"><h2 id="board-heading">El tauler<span> / </span><small>{90 - history.length} pendents</small></h2><span className="count"><strong>{history.length}</strong> / 90</span></div><BingoBoard markedNumbers={history}/><div className="board-legend"><span><i className="legend-current"/>Actual</span><span><i className="legend-marked"/>Ja ha sortit</span><span>90 NÚMEROS · UNA FESTA</span></div></section>
+        <section className="history" aria-label="Últims números"><div className="history-title"><span className="panel-label">Últims números</span><span>Del més recent a l’anterior</span></div><div className="history-list">{Array.from({ length: 5 }, (_, i) => <span className="history-number" key={i}>{history[history.length - 2 - i] === undefined ? '—' : String(history[history.length - 2 - i]).padStart(2, '0')}</span>)}</div></section>
+        <section className="board-card" aria-labelledby="board-heading"><div className="board-heading"><h2 id="board-heading">El tauler<span> / </span><small>{90 - history.length} pendents</small></h2><span className="count"><strong>{history.length}</strong> / 90</span></div><BingoBoard markedNumbers={history}/><div className="board-legend"><span><i className="legend-current"/>Actual</span><span><i className="legend-marked"/>Ja ha sortit</span><span>90 números · Una festa</span></div></section>
       </section>
     </main>
-    <footer className="shortcut-bar" aria-label="Dreceres de teclat"><span className="shortcut-label">TU PORTES<br />EL RITME</span><span><kbd>Enter</kbd>Següent número</span><span><kbd>L</kbd>Línia</span><span><kbd>Q</kbd>Quina</span><span><kbd>P</kbd>Reproduir / Pausa</span><span><kbd>F</kbd>Pantalla completa</span><span><kbd>N</kbd>Nova partida</span><span><kbd>Esc</kbd>Tancar premi</span></footer>
+    <footer className="shortcut-bar" aria-label="Dreceres de teclat"><span className="shortcut-label">Dreceres<br />de teclat</span><span><kbd>Enter</kbd>Següent número</span><span><kbd>L</kbd>Línia</span><span><kbd>Q</kbd>Quina</span><span><kbd>P</kbd>Reproduir / Pausa</span><span><kbd>F</kbd>Pantalla completa</span><span><kbd>N</kbd>Nova partida</span><span><kbd>Esc</kbd>Tancar premi</span></footer>
     {(notice || storageError) && <div className="notice" role="status">{notice || 'No es pot desar la partida. Mantén aquesta pàgina oberta.'}<button onClick={() => setNotice('')} aria-label="Tancar avís">×</button></div>}
     {celebration && spotlight && <Modal label="spotlight-title" className={`prize-dialog ${celebration}`} onClose={() => setSpotlight(false)}><canvas className="prize-confetti" aria-hidden="true" /><div className="prize-content"><span className="prize-kicker"><Zap />QUE SE SENTI A TOTA LA SALA<Zap /></span><Trophy className="prize-trophy" /><p className="prize-intro">HAN CANTAT</p><h2 id="spotlight-title">{celebration === 'line' ? 'LÍNIA!' : 'QUINA!'}</h2><p className="prize-tagline">UN APLAUDIMENT PER AQUEST CARTRÓ!</p><p className="prize-help">En 4 segons tornem al tauler per comprovar els números.</p><button autoFocus className="primary-button" onClick={() => setSpotlight(false)}>Veure els números<kbd>Esc</kbd></button></div></Modal>}
     {confirmReset && <Modal label="reset-title" onClose={() => setConfirmReset(false)}><h2 id="reset-title">TORNEM A COMENÇAR?</h2><p>S’esborraran els {history.length} números d’aquesta partida.</p><div className="dialog-actions"><button autoFocus className="secondary-button" onClick={() => setConfirmReset(false)}>Continuar la partida</button><button className="primary-button" onClick={() => { reset(); setConfirmReset(false); }}>Nova partida</button></div></Modal>}

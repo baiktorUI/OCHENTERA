@@ -1,0 +1,80 @@
+/* BoardUI-inspired visual layer. Layout remains fitted to the projector. */
+:root { font-family: 'Inter', 'Inter Tight', Arial, sans-serif; color:#171717; background:#fff; --ink:#171717; --paper:#fff; --paper-dark:#f3f3f3; --orange:#246bfe; --mono:'Inter','Inter Tight',Arial,sans-serif; }
+body { background:#fff; }
+.topbar { border-bottom:1px solid #ededed; padding-bottom:5px; }
+.header-title { gap:1.7vw; }
+.header-title > span { color:#777; font-weight:400; letter-spacing:0; max-width:115px; }
+.header-title h1 { font-weight:600; letter-spacing:-.045em; }
+.header-title h1 > span { color:#246bfe; }
+.session-pill { background:#ecf4ff; color:#245ac0; border:1px solid #d5e5ff; border-radius:7px; padding:.55em .8em; font-weight:500; letter-spacing:0; }
+.session-pill i { background:#246bfe; border-radius:50%; transform:none; }
+.icon-button { background:#fff; color:#454545; border:1px solid #e4e4e4; border-radius:10px; box-shadow:0 1px 2px #00000008; }
+.icon-button:hover:not(:disabled) { background:#f4f4f4; }
+button:focus-visible,input:focus-visible { outline:2px solid #246bfe; outline-offset:-3px; }
+.draw-card,.media-card,.history,.board-card,.shortcut-bar,.prize-banner { clip-path:none; border-radius:clamp(10px,1.8vmin,22px); }
+.draw-card { background:#f6f6f6; border:1px solid #eeeeee; color:#171717; }
+.draw-card::before,.draw-card::after,.media-card::after { display:none; }
+.panel-label { color:#717171; font-weight:500; letter-spacing:0; }
+.draw-number { color:#246bfe; font-weight:600; letter-spacing:-.07em; }
+.draw-caption { color:#686868; font-size:clamp(9px,1.3vmin,18px); }
+.media-card { background:#f6f6f6; border:1px solid #eee; }
+.media-art { border:0; border-radius:10px; background:#ececec; overflow:hidden; }
+.media-badge { color:#717171; font-weight:500; }
+.media-art img { background:#ececec; }
+.record { color:#8e9cc0; background:linear-gradient(145deg,#f0f4ff,#e8edfa); }
+.record span { color:#6b7797; letter-spacing:0; }
+.record svg { stroke-width:.8; }
+.audio-controls { background:#fff; border-top:1px solid #e9e9e9; }
+.audio-toggle { color:#246bfe; }
+.audio-controls input { accent-color:#246bfe; }
+.audio-controls > span { color:#737373; }
+.audio-error { background:#fff8edf5; color:#82551d; border-top:1px solid #f1e1c9; border-radius:5px; }
+.history { background:#f6f6f6; border:1px solid #eee; }
+.history-title > span:last-child { color:#777; }
+.history-number { background:#fff; border:1px solid #ebebeb; border-radius:9px; color:#292929; font-weight:500; box-shadow:0 1px 2px #00000004; }
+.history-number:first-child { background:linear-gradient(#3880ff,#1760f6); border-color:#2875ff; color:#fff; box-shadow:inset 0 1px 0 #ffffff44; }
+.board-card { background:#f6f6f6; border:1px solid #eee; }
+.board-heading h2 { font-weight:500; letter-spacing:-.025em; }
+.board-heading h2 > span { color:#ccc; }
+.board-heading small { color:#777; }
+.count { background:#e6f4c8; color:#537127; border-radius:5px; padding:.3em .5em; }
+.count strong { color:#314d0e; }
+.bingo-number { background:#fff; border:1px solid #e6e6e6; border-radius:6px; color:#777; font-weight:500; }
+.bingo-number.marked { background:#dce8ff; border-color:#c7d9ff; color:#2358b9; }
+.bingo-number.current { background:linear-gradient(#3880ff,#1760f6); border:2px solid #164abe; color:#fff; box-shadow:inset 0 0 0 1px #ffffff70; }
+.board-legend { color:#6e6e6e; }
+.board-legend i { border-radius:3px; }
+.legend-current { background:#246bfe; }
+.legend-marked { background:#a9c5ff; }
+.shortcut-bar { background:#f6f6f6; border:1px solid #eaeaea; color:#555; }
+.shortcut-bar .shortcut-label { color:#777; letter-spacing:0; }
+kbd { color:#444; border:1px solid #dedede; border-bottom-width:2px; border-radius:5px; background:#fff; font-weight:500; }
+.dialog { background:#fff; color:#171717; border:1px solid #e5e5e5; border-radius:18px; box-shadow:0 20px 90px #18335c20; }
+.dialog::backdrop { background:#e7edf6d9; backdrop-filter:blur(8px); }
+.dialog h2 { font-weight:600; letter-spacing:-.045em; }
+.dialog p { color:#737373; }
+.primary-button { background:linear-gradient(#3880ff,#1760f6); color:#fff; border:1px solid #246bfe; border-radius:8px; box-shadow:0 1px 2px #1b5fe322; }
+.secondary-button { background:#f6f6f6; color:#454545; border:1px solid #e3e3e3; border-radius:8px; }
+.primary-button kbd { color:#fff; background:#ffffff22; border-color:#ffffff66; }
+.notice { color:#715323; background:#fff8eb; border-color:#e9d8b9; border-radius:10px; }
+.prize-dialog,.prize-dialog.quina { background:#fff; clip-path:none; border:1px solid #dfe8f6; border-radius:24px; box-shadow:0 20px 100px #246bfe20; }
+.prize-dialog::before { inset:3%; border:1px solid #e6edfa; border-radius:18px; background:radial-gradient(ellipse at center,#edf4ff 0%,#fff 70%); }
+.prize-kicker { color:#71829f; font-weight:500; letter-spacing:.08em; }
+.prize-trophy { color:#246bfe; background:#e6efff; padding:1.4vmin; box-sizing:content-box; border-radius:20%; stroke-width:1.3; }
+.prize-dialog .prize-intro { color:#72819a; letter-spacing:.12em; }
+.prize-dialog h2 { color:#246bfe; font-weight:600; letter-spacing:-.065em; }
+.prize-dialog .prize-tagline { color:#293951; font-weight:500; }
+.prize-dialog .prize-help { color:#737f91; }
+.prize-dialog .primary-button { background:linear-gradient(#3880ff,#1760f6); color:#fff; border-color:#246bfe; }
+.prize-dialog .primary-button kbd { border-color:#ffffff66; }
+.prize-banner,.prize-banner.quina { color:#194a99; background:#edf4ff; border:1px solid #cbdfff; }
+.prize-banner h2 { color:#246bfe; letter-spacing:-.05em; }
+.banner-trophy { color:#246bfe; }
+.banner-help { color:#315b9b; }
+.banner-help small { color:#6c7e98; }
+.prize-banner .primary-button { background:linear-gradient(#3880ff,#1760f6); color:#fff; border-color:#246bfe; border-radius:8px; }
+.prize-banner .primary-button kbd { border-color:#ffffff66; }
+.checking-card .board-card { background:#f6f8fc; border-color:#a5c7ff; }
+.checking-card .board-heading { border-left-color:#246bfe; }
+@media(max-aspect-ratio:1/1) { .draw-caption { font-size:7px; }.session-pill { display:none; }.banner-help small { display:none; } }
+@media(max-aspect-ratio:1/1) and (max-height:650px) { .draw-caption { font-size:6px; } }
