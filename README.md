@@ -1,6 +1,6 @@
 # Ochentera · Quina musical
 
-Quina musical de 90 números, pensada per projectar en una única pantalla. Interfície en català amb composició editorial: portada musical a gran escala, número superposat en serif cursiva i tauler com a índex tipogràfic. La capçalera utilitza només text, sense logotip d’imatge.
+Quina musical de 90 números, pensada per projectar en una única pantalla. Interfície en català amb composició editorial: portada musical a gran escala, número superposat en sans serif negreta i tauler com a índex tipogràfic. La capçalera utilitza només text, sense logotip d’imatge.
 
 ## Desenvolupament
 
@@ -62,4 +62,4 @@ Inter Tight (400–700) i JetBrains Mono (400–500) s’inclouen en format WOFF
 
 Totes les cançons també tenen un fade in lineal de 0,8 segons des del silenci fins al volum normal. Es torna a aplicar en repetir la cançó des del principi; en reprendre a mig tema, es respecta el temps actual.
 
-La composició actual es defineix a `src/editorial.css`, sobre les regles compartides de `src/stage.css`. En horitzontal, la portada i el número comparteixen el costat esquerre, amb l’historial a sota. El tauler de 10 columnes × 9 files ocupa tot el costat dret. En vertical, el tauler passa sota la portada i l’historial. La marca i el número utilitzen Georgia en cursiva; el tauler utilitza Inter Tight local i les etiquetes JetBrains Mono. Es respecta la preferència de moviment reduït.
+La composició actual es defineix a `src/editorial.css`, sobre les regles compartides de `src/stage.css`. En horitzontal, la portada i el número comparteixen el costat esquerre, amb l’historial a sota. El tauler de 10 columnes × 9 files ocupa tot el costat dret. En vertical, el tauler passa sota la portada i l’historial. La marca utilitza Georgia en cursiva; el número i el tauler utilitzen Inter Tight local i les etiquetes JetBrains Mono. Es respecta la preferència de moviment reduït.
