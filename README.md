@@ -1,6 +1,6 @@
 # Ochentera · Quina musical
 
-Quina musical de 90 números, pensada per projectar en una única pantalla. Interfície en català amb un marc de navegador decoratiu, superfícies de vidre translúcid i fons de colors pastel difuminats. Es conserva Inter Tight com a font local de suport. La capçalera utilitza només text, sense logotip d’imatge.
+Quina musical de 90 números, pensada per projectar en una única pantalla. Interfície en català inspirada en cartells de concerts: fons fosc, blocs rectangulars en llima, rosa i violeta, i tipografia Inter Tight de gran format. La capçalera utilitza només text, sense logotip d’imatge.
 
 ## Desenvolupament
 
@@ -62,6 +62,4 @@ Inter Tight (400–700) i JetBrains Mono (400–500) s’inclouen en format WOFF
 
 Totes les cançons també tenen un fade in lineal de 0,8 segons des del silenci fins al volum normal. Es torna a aplicar en repetir la cançó des del principi; en reprendre a mig tema, es respecta el temps actual.
 
-L’estil visual actual es defineix a `src/board-theme.css`, separat de les regles de distribució per conservar l’ajust al projector.
-
-El tema actual és `src/glass-theme.css`: marc de navegador, desenfocament de fons, targetes translúcides i paleta pastel. El fons és estàtic per reduir el consum durant la projecció. Inclou alternativa opaca quan el navegador no admet backdrop-filter o quan es prefereix menys transparència.
+L’estil visual es defineix íntegrament a `src/stage.css`. En horitzontal, el número, la música i l’historial ocupen la franja superior i el tauler de 15 columnes × 6 files ocupa tota l’amplada inferior. En vertical, el tauler passa a 10 columnes × 9 files. El disseny respecta la preferència de moviment reduït.

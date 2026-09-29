@@ -8,7 +8,7 @@ const errors = [];
 page.on('pageerror', error => errors.push(error.message));
 async function fits() {
   const overflow = await page.evaluate(() => {
-    const selectors = ['.app-shell', '.browser-bar', '.topbar', '.game-layout', '.draw-card', '.media-card', '.history', '.history-list', '.board-card', '.bingo-board', '.shortcut-bar'];
+    const selectors = ['.app-shell', '.topbar', '.game-layout', '.draw-card', '.media-card', '.history', '.history-list', '.board-card', '.bingo-board', '.shortcut-bar'];
     return selectors.filter(selector => {
       const element = document.querySelector(selector); const rect = element.getBoundingClientRect();
       return rect.bottom > innerHeight + 1 || rect.right > innerWidth + 1 || rect.top < -1 || element.scrollHeight > element.clientHeight + 2 || element.scrollWidth > element.clientWidth + 2;

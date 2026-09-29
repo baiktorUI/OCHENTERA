@@ -5,9 +5,7 @@ import { Modal } from './components/Modal';
 import { BingoBoard } from './components/BingoBoard';
 import { MediaPanel } from './components/MediaPanel';
 import { useNumberStore } from './utils/numberGenerator';
-import './index.css';
-import './board-theme.css';
-import './glass-theme.css';
+import './stage.css';
 export default function App() {
     const { history, draw, reset, storageError } = useNumberStore();
     const [celebration, setCelebration] = useState<'line' | 'quina' | null>(null);
@@ -81,29 +79,28 @@ export default function App() {
             return;
         const burst = confetti.create(canvas, { resize: true });
         const fire = () => {
-            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .2, y: .65 }, colors: ['#246bfe', '#a7c8ff', '#ddedba', '#ffffff'], disableForReducedMotion: true });
-            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .8, y: .65 }, colors: ['#246bfe', '#a7c8ff', '#ddedba', '#ffffff'], disableForReducedMotion: true });
+            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .2, y: .65 }, colors: ['#dbff59', '#ff8fa6', '#5751ed', '#fffced'], disableForReducedMotion: true });
+            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .8, y: .65 }, colors: ['#dbff59', '#ff8fa6', '#5751ed', '#fffced'], disableForReducedMotion: true });
         };
         fire();
         const timer = window.setTimeout(fire, 850);
         return () => { window.clearTimeout(timer); burst.reset(); };
     }, [celebration, spotlight]);
     return <div className="app-shell">
-    <div className="browser-bar" aria-label="Marc de navegador"><span className="window-dots" aria-hidden="true"><i /><i /><i /></span><span className="browser-address"><span aria-hidden="true">◇</span> ochentera · quina musical</span><span className="browser-decoration" aria-hidden="true">＋</span></div>
     <header className={`topbar ${celebration ? "has-prize" : ""}`}>
       {celebration ? <section className={`prize-banner ${celebration}`} aria-labelledby="celebration-title"><Trophy className="banner-trophy" /><h2 id="celebration-title" role="status">{celebration === 'line' ? 'LÍNIA!' : 'QUINA!'}</h2><span className="banner-help">COMPROVANT EL CARTRÓ<small>Partida en pausa · Reviseu els números del tauler.</small></span><button className="primary-button" onClick={() => setCelebration(null)}>Tornem-hi!<kbd>Esc</kbd></button></section> : <>
-      <div className="header-title"><span>Quina musical · En directe</span><h1>Ochentera<span>.</span></h1></div>
+      <div className="header-title"><span>VOLUM ALT. BONA SORT.</span><h1>OCHENTERA<span aria-hidden="true">✳</span></h1></div>
       <div className="header-actions"><span className="session-pill"><i />{history.length === 90 ? 'Partida completa' : 'Quina musical'}</span><button className="icon-button" onClick={fullscreen} aria-label="Pantalla completa"><Maximize2 /></button><button className="icon-button" onClick={() => setConfirmReset(true)} disabled={!history.length} aria-label="Nova partida"><RotateCcw /></button></div>
       </>}
     </header>
     <main className={`game-layout ${celebration ? "checking-card" : ""}`}>
       <section className="play-column" aria-label="Número i música">
-        <section className="draw-card" aria-label="Número actual"><span className="panel-label">Número actual</span><div className="draw-number" key={current} aria-live="polite">{current === null ? '—' : String(current).padStart(2, '0')}</div><span className="draw-caption">{history.length === 90 ? 'Ja han sortit tots els números' : current ? 'Escolta, marca i canta.' : 'Prem Enter per començar la partida'}</span><Zap className="draw-zap" aria-hidden="true"/></section>
+        <section className="draw-card" aria-label="ARA SONA"><span className="panel-label">Número actual</span><div className="draw-number" key={current} aria-live="polite">{current === null ? '—' : String(current).padStart(2, '0')}</div><span className="draw-caption">{history.length === 90 ? 'Ja han sortit tots els números' : current ? 'Escolta, marca i canta.' : 'Prem Enter per començar la partida'}</span><Zap className="draw-zap" aria-hidden="true"/></section>
         <MediaPanel currentNumber={current} paused={!!celebration || confirmReset}/>
       </section>
       <section className="board-column" aria-label="Seguiment de la partida">
-        <section className="history" aria-label="Últims números"><div className="history-title"><span className="panel-label">Últims números</span><span>Del més recent a l’anterior</span></div><div className="history-list">{Array.from({ length: 5 }, (_, i) => <span className="history-number" key={i}>{history[history.length - 2 - i] === undefined ? '—' : String(history[history.length - 2 - i]).padStart(2, '0')}</span>)}</div></section>
-        <section className="board-card" aria-labelledby="board-heading"><div className="board-heading"><h2 id="board-heading">El tauler<span> / </span><small>{90 - history.length} pendents</small></h2><span className="count"><strong>{history.length}</strong> / 90</span></div><BingoBoard markedNumbers={history}/><div className="board-legend"><span><i className="legend-current"/>Actual</span><span><i className="legend-marked"/>Ja ha sortit</span><span>90 números · Una festa</span></div></section>
+        <section className="history" aria-label="Últims números"><div className="history-title"><span className="panel-label">JA HAN SONAT</span><span>Del més recent a l’anterior</span></div><div className="history-list">{Array.from({ length: 5 }, (_, i) => <span className="history-number" key={i}>{history[history.length - 2 - i] === undefined ? '—' : String(history[history.length - 2 - i]).padStart(2, '0')}</span>)}</div></section>
+        <section className="board-card" aria-labelledby="board-heading"><div className="board-heading"><h2 id="board-heading">LA SALA CANTA<span> / </span><small>{90 - history.length} pendents</small></h2><span className="count"><strong>{history.length}</strong> / 90</span></div><BingoBoard markedNumbers={history}/><div className="board-legend"><span><i className="legend-current"/>Actual</span><span><i className="legend-marked"/>Ja ha sortit</span><span>90 TEMES. UNA SOLA VEU.</span></div></section>
       </section>
     </main>
     <footer className="shortcut-bar" aria-label="Dreceres de teclat"><span className="shortcut-label">Dreceres<br />de teclat</span><span><kbd>Enter</kbd>Següent número</span><span><kbd>L</kbd>Línia</span><span><kbd>Q</kbd>Quina</span><span><kbd>P</kbd>Reproduir / Pausa</span><span><kbd>F</kbd>Pantalla completa</span><span><kbd>N</kbd>Nova partida</span><span><kbd>Esc</kbd>Tancar premi</span></footer>
