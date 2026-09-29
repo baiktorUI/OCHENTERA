@@ -7,6 +7,7 @@ import { MediaPanel } from './components/MediaPanel';
 import { useNumberStore } from './utils/numberGenerator';
 import './stage.css';
 import './editorial.css';
+import './botanical.css';
 export default function App() {
     const { history, draw, reset, storageError } = useNumberStore();
     const [celebration, setCelebration] = useState<'line' | 'quina' | null>(null);
@@ -80,8 +81,8 @@ export default function App() {
             return;
         const burst = confetti.create(canvas, { resize: true });
         const fire = () => {
-            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .2, y: .65 }, colors: ['#dbff59', '#ff8fa6', '#5751ed', '#fffced'], disableForReducedMotion: true });
-            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .8, y: .65 }, colors: ['#dbff59', '#ff8fa6', '#5751ed', '#fffced'], disableForReducedMotion: true });
+            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .2, y: .65 }, colors: ['#c3ff59', '#145f39', '#f3dbae', '#fff2d3'], disableForReducedMotion: true });
+            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .8, y: .65 }, colors: ['#c3ff59', '#145f39', '#f3dbae', '#fff2d3'], disableForReducedMotion: true });
         };
         fire();
         const timer = window.setTimeout(fire, 850);
@@ -110,3 +111,4 @@ export default function App() {
     {confirmReset && <Modal label="reset-title" onClose={() => setConfirmReset(false)}><h2 id="reset-title">TORNEM A COMENÇAR?</h2><p>S’esborraran els {history.length} números d’aquesta partida.</p><div className="dialog-actions"><button autoFocus className="secondary-button" onClick={() => setConfirmReset(false)}>Continuar la partida</button><button className="primary-button" onClick={() => { reset(); setConfirmReset(false); }}>Nova partida</button></div></Modal>}
   </div>;
 }
+
