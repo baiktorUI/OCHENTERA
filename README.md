@@ -1,6 +1,6 @@
 # Ochentera · Quina musical
 
-Quina musical de 90 números, pensada per projectar en una única pantalla. Interfície en català inspirada en cartells de concerts: fons fosc, blocs rectangulars en llima, rosa i violeta, i tipografia Inter Tight de gran format. La capçalera utilitza només text, sense logotip d’imatge.
+Quina musical de 90 números, pensada per projectar en una única pantalla. Interfície en català amb composició editorial: portada musical a gran escala, número superposat en serif cursiva i tauler com a índex tipogràfic. La capçalera utilitza només text, sense logotip d’imatge.
 
 ## Desenvolupament
 
@@ -31,7 +31,7 @@ Els premis aturen l’àudio i el sorteig fins que es tanquen. Per reprendre la 
 
 ## Projecció
 
-La pantalla s’ajusta a l’alçada i l’amplada disponibles, sense desplaçament de la pàgina ni dels panells. El número i la música ocupen dos panells iguals. Els cinc números anteriors es mostren destacats, del més recent al més antic. Es recomana F per aprofitar tota la superfície del projector.
+La pantalla s’ajusta a l’alçada i l’amplada disponibles, sense desplaçament de la pàgina ni dels panells. El número se superposa sobre la portada musical amb una base fosca per assegurar el contrast. Els cinc números anteriors es mostren destacats, del més recent al més antic. Es recomana F per aprofitar tota la superfície del projector.
 
 Comprovat a 1920×1080, 1366×768, 1280×720, 1024×768, 800×600, 390×844 i 320×568. En pantalles verticals la distribució canvia i els textos són més petits; per projectar, utilitza orientació horitzontal.
 
@@ -50,7 +50,7 @@ Un enllaç de Spotify no és una URL de MP3. La política de desenvolupadors de 
 
 La compilació comprova TypeScript de l’aplicació i de Vite. `tests/browser.mjs` executa proves amb Playwright i Chrome. Instal·la Playwright al teu entorn de proves, inicia el servidor al port 5173 i executa `node tests/browser.mjs`. `PLAYWRIGHT_MODULE` permet indicar una instal·lació externa; `BROWSER_CHANNEL` permet seleccionar un altre navegador compatible.
 
-Les proves comproven la llengua, absència del botó de sorteig, 90 números únics, persistència, reinici, premis, focus del diàleg, pausa de l’àudio, igualtat dels panells, absència de desbordaments en set resolucions, dades corruptes i errors d’àudio o imatge. Les captures es generen a `tests/` i no s’inclouen a Git.
+Les proves comproven la llengua, absència del botó de sorteig, 90 números únics, persistència, reinici, premis, focus del diàleg, pausa de l’àudio, visibilitat del número i accés als controls superposats, absència de desbordaments en set resolucions, dades corruptes i errors d’àudio o imatge. Les captures es generen a `tests/` i no s’inclouen a Git.
 
 ## Final suau de les cançons
 
@@ -62,4 +62,4 @@ Inter Tight (400–700) i JetBrains Mono (400–500) s’inclouen en format WOFF
 
 Totes les cançons també tenen un fade in lineal de 0,8 segons des del silenci fins al volum normal. Es torna a aplicar en repetir la cançó des del principi; en reprendre a mig tema, es respecta el temps actual.
 
-L’estil visual es defineix íntegrament a `src/stage.css`. En horitzontal, el número, la música i l’historial ocupen la franja superior i el tauler de 15 columnes × 6 files ocupa tota l’amplada inferior. En vertical, el tauler passa a 10 columnes × 9 files. El disseny respecta la preferència de moviment reduït.
+La composició actual es defineix a `src/editorial.css`, sobre les regles compartides de `src/stage.css`. En horitzontal, la portada i el número comparteixen el costat esquerre, amb l’historial a sota. El tauler de 10 columnes × 9 files ocupa tot el costat dret. En vertical, el tauler passa sota la portada i l’historial. La marca i el número utilitzen Georgia en cursiva; el tauler utilitza Inter Tight local i les etiquetes JetBrains Mono. Es respecta la preferència de moviment reduït.

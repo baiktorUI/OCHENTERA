@@ -15,8 +15,9 @@ async function fits() {
     });
   });
   assert.deepEqual(overflow, [], 'All panels fit without internal or page overflow');
-  const sizes = await page.evaluate(() => ['.draw-card', '.media-card'].map(s => { const r = document.querySelector(s).getBoundingClientRect(); return [r.width, r.height]; }));
-  assert.ok(Math.abs(sizes[0][0] - sizes[1][0]) < 1 && Math.abs(sizes[0][1] - sizes[1][1]) < 1, 'Number and music occupy equal areas');
+  const number = await page.locator('.draw-number').boundingBox();
+  assert.ok(number.width > 50 && number.height > 60, 'Current number remains prominent');
+  assert.equal(await page.locator('.audio-toggle').evaluate(el => { const r = el.getBoundingClientRect(); return el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)); }), true, 'Layered artwork does not obstruct audio controls');
 }
 try {
   await page.goto('http://127.0.0.1:5173');
@@ -91,5 +92,5 @@ try {
   assert.equal(await page.locator('.record').count(), 1);
   await fits();
   assert.deepEqual(errors, []);
-  console.log('PASS: Catalan, keyboard-only draw, 90 unique numbers, persistence, reset, prizes, unobscured prize banner, paused audio, equal panels and no overflow at 7 screen sizes, corrupt storage and media failures.');
+  console.log('PASS: Catalan, keyboard-only draw, 90 unique numbers, persistence, reset, prizes, unobscured prize banner, paused audio, prominent number, accessible audio controls and no overflow at 7 screen sizes, corrupt storage and media failures.');
 } finally { await browser.close(); }
