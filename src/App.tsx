@@ -9,6 +9,7 @@ import './stage.css';
 import './editorial.css';
 import './botanical.css';
 import './glass-refinement.css';
+import './azure-glass.css';
 export default function App() {
     const { history, draw, reset, storageError } = useNumberStore();
     const [celebration, setCelebration] = useState<'line' | 'quina' | null>(null);
@@ -82,8 +83,8 @@ export default function App() {
             return;
         const burst = confetti.create(canvas, { resize: true });
         const fire = () => {
-            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .2, y: .65 }, colors: ['#c3ff59', '#145f39', '#f3dbae', '#fff2d3'], disableForReducedMotion: true });
-            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .8, y: .65 }, colors: ['#c3ff59', '#145f39', '#f3dbae', '#fff2d3'], disableForReducedMotion: true });
+            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .2, y: .65 }, colors: ['#ffffff', '#bcefff', '#0980ee', '#9ac9ff'], disableForReducedMotion: true });
+            void burst({ particleCount: celebration === 'quina' ? 110 : 65, spread: 100, origin: { x: .8, y: .65 }, colors: ['#ffffff', '#bcefff', '#0980ee', '#9ac9ff'], disableForReducedMotion: true });
         };
         fire();
         const timer = window.setTimeout(fire, 850);
