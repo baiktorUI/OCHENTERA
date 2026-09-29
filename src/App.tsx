@@ -8,6 +8,7 @@ import { useNumberStore } from './utils/numberGenerator';
 import './stage.css';
 import './editorial.css';
 import './botanical.css';
+import './glass-refinement.css';
 export default function App() {
     const { history, draw, reset, storageError } = useNumberStore();
     const [celebration, setCelebration] = useState<'line' | 'quina' | null>(null);
