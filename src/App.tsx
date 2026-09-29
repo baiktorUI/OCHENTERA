@@ -7,6 +7,7 @@ import { MediaPanel } from './components/MediaPanel';
 import { useNumberStore } from './utils/numberGenerator';
 import './index.css';
 import './board-theme.css';
+import './glass-theme.css';
 export default function App() {
     const { history, draw, reset, storageError } = useNumberStore();
     const [celebration, setCelebration] = useState<'line' | 'quina' | null>(null);
@@ -88,6 +89,7 @@ export default function App() {
         return () => { window.clearTimeout(timer); burst.reset(); };
     }, [celebration, spotlight]);
     return <div className="app-shell">
+    <div className="browser-bar" aria-label="Marc de navegador"><span className="window-dots" aria-hidden="true"><i /><i /><i /></span><span className="browser-address"><span aria-hidden="true">◇</span> ochentera · quina musical</span><span className="browser-decoration" aria-hidden="true">＋</span></div>
     <header className={`topbar ${celebration ? "has-prize" : ""}`}>
       {celebration ? <section className={`prize-banner ${celebration}`} aria-labelledby="celebration-title"><Trophy className="banner-trophy" /><h2 id="celebration-title" role="status">{celebration === 'line' ? 'LÍNIA!' : 'QUINA!'}</h2><span className="banner-help">COMPROVANT EL CARTRÓ<small>Partida en pausa · Reviseu els números del tauler.</small></span><button className="primary-button" onClick={() => setCelebration(null)}>Tornem-hi!<kbd>Esc</kbd></button></section> : <>
       <div className="header-title"><span>Quina musical · En directe</span><h1>Ochentera<span>.</span></h1></div>
